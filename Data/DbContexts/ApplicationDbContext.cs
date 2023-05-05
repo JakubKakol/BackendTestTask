@@ -16,13 +16,13 @@ namespace BackendTestTask.Data.DbContexts
 
             modelBuilder.Entity<Node>()
                 .HasOne(n => n.Tree)
-                .WithMany(t => t.Nodes)
+                .WithMany(t => t.Children)
                 .HasForeignKey(n => n.TreeID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Node>()
                 .HasOne(n => n.ParentNode)
-                .WithMany(n => n.ChildrenNodes)
+                .WithMany(n => n.Children)
                 .HasForeignKey(n => n.ParentNodeID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
