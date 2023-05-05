@@ -29,5 +29,6 @@ namespace BackendTestTask.Data.DbContexts
 
         public DbSet<Node> Node { get; set; }
         public DbSet<Tree> Tree { get; set; }
+        public DbSet<JournalItem> JournalItem { get; set; }
     }
 }
