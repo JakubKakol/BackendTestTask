@@ -12,20 +12,13 @@ namespace BackendTestTask.Controllers
             _repository = repository;
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Get(string name)
         {
-            try
+            return TryCatchResult(() =>
             {
-                var tree = _repository.GetTree(name);
-
-                return Ok(tree);
-            }
-            catch (Exception ex)
-            {
-                //TODO - Add custom exception and handling
-                return Json(ex);
-            }
+                return _repository.GetTree(name);
+            });
         }
     }
 }

@@ -14,52 +14,31 @@ namespace BackendTestTask.Controllers
             _repository = repository;
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Create(string treeName, int parentNodeId, string nodeName)
         {
-            try
+            return TryCatchOperation(() =>
             {
                 _repository.CreateNode(treeName, parentNodeId, nodeName);
-            }
-            catch (Exception ex)
-            {
-                //TODO - Add custom exception and handling
-                return Json(ex);
-            }
-
-            return Ok();
+            });
         }
 
-        [HttpDelete]
+        [HttpPost]
         public IActionResult Delete(string treeName, int nodeId)
         {
-            try
+            return TryCatchOperation(() =>
             {
                 _repository.DeleteNode(treeName, nodeId);
-            }
-            catch (Exception ex)
-            {
-                //TODO - Add custom exception and handling
-                return Json(ex);
-            }
-
-            return Ok();
+            });
         }
 
-        [HttpPatch]
+        [HttpPost]
         public IActionResult Rename(string treeName, int nodeId, string newNodeName)
         {
-            try
+            return TryCatchOperation(() =>
             {
                 _repository.RenameNode(treeName, nodeId, newNodeName);
-            }
-            catch (Exception ex)
-            {
-                //TODO - Add custom exception and handling
-                return Json(ex);
-            }
-
-            return Ok();
+            });
         }
 
     }
