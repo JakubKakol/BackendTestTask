@@ -61,7 +61,7 @@ namespace BackendTestTask.Controllers
                 Timestamp = DateTimeOffset.UtcNow,
                 RequestQueryString = queryString,
                 RequestBody = requestBody,
-                ExceptionType = exception.GetType().Name,
+                ExceptionType = exception is SecureException ? nameof(SecureException) : nameof(Exception),
                 ExceptionMessage = exception.Message,
                 StackTrace = exception.StackTrace
             };
@@ -90,7 +90,7 @@ namespace BackendTestTask.Controllers
                 id = item.EventId,
                 data = new
                 {
-                    message = item.ExceptionType == typeof(SecureException).Name ? item.ExceptionMessage : $"Internal server error ID = {item.EventId}" //TODO - Remove workaround
+                    message = item.ExceptionType == nameof(SecureException) ? item.ExceptionMessage : $"Internal server error ID = {item.EventId}"
                 }
             };
         }
