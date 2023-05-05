@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using BackendTestTask.Data.DbContexts;
 using BackendTestTask.Data.Models;
 using BackendTestTask.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace BackendTestTask.Controllers
     public abstract class ApiControllerBase : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ApplicationDbContext _context;
 
-        public ApiControllerBase(IHttpContextAccessor httpContextAccessor)
+        public ApiControllerBase(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         [NonAction]
@@ -64,7 +67,8 @@ namespace BackendTestTask.Controllers
                 StackTrace = exception.StackTrace
             };
 
-            //TODO - Add DbSet for JournalItem
+            await _context.JournalItem.AddAsync(journalItem);
+            await _context.SaveChangesAsync();
 
             return journalItem;
         }

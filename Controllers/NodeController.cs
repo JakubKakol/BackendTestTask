@@ -1,4 +1,5 @@
-﻿using BackendTestTask.Services;
+﻿using BackendTestTask.Data.DbContexts;
+using BackendTestTask.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackendTestTask.Controllers
@@ -9,7 +10,7 @@ namespace BackendTestTask.Controllers
     {
         private readonly ITreeAndNodeRepository _repository;
 
-        public NodeController(ITreeAndNodeRepository repository, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public NodeController(ITreeAndNodeRepository repository, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context) : base(httpContextAccessor, context)
         {
             _repository = repository;
         }
