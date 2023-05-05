@@ -39,7 +39,16 @@ namespace BackendTestTask.Services
         }
 
         public async Task<Node> GetNodeFromTreeAsync(int treeId, int nodeID)
-            => await _context.Node.Where(n => n.TreeID == treeId).FirstAsync(n => n.ID == nodeID);
+        {
+            var node = await _context.Node.Where(n => n.TreeID == treeId).FirstOrDefaultAsync(n => n.ID == nodeID);
+
+            if (node == null)
+            {
+                throw new NodeNotFoundException(treeId, nodeID);
+            }
+
+            return node;
+        }
 
         public async Task CreateNodeAsync(string treeName, int parentNodeId, string nodeName)
         {
