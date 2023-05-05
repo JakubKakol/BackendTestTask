@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using BackendTestTask.Data.DbContexts;
+﻿using BackendTestTask.Data.DbContexts;
 using BackendTestTask.Data.Models;
 using BackendTestTask.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -59,10 +58,10 @@ namespace BackendTestTask.Controllers
             var journalItem = new JournalItem
             {
                 EventId = Guid.NewGuid().ToString(),
-                Timestamp = DateTimeOffset.UtcNow, //TODO - Date format
+                Timestamp = DateTimeOffset.UtcNow,
                 RequestQueryString = queryString,
                 RequestBody = requestBody,
-                ExceptionType = exception.GetType().Name, //TODO - Exception type name adjustment
+                ExceptionType = exception.GetType().Name,
                 ExceptionMessage = exception.Message,
                 StackTrace = exception.StackTrace
             };
@@ -91,7 +90,7 @@ namespace BackendTestTask.Controllers
                 id = item.EventId,
                 data = new
                 {
-                    message = item.ExceptionType == "Secure" ? item.ExceptionMessage : $"Internal server error ID = {item.EventId}" //TODO - Remove workaround
+                    message = item.ExceptionType == typeof(SecureException).Name ? item.ExceptionMessage : $"Internal server error ID = {item.EventId}" //TODO - Remove workaround
                 }
             };
         }
