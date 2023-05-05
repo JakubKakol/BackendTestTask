@@ -9,35 +9,35 @@ namespace BackendTestTask.Controllers
     {
         private readonly ITreeAndNodeRepository _repository;
 
-        public NodeController(ITreeAndNodeRepository repository)
+        public NodeController(ITreeAndNodeRepository repository, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _repository = repository;
         }
 
         [HttpPost]
-        public IActionResult Create(string treeName, int parentNodeId, string nodeName)
+        public async Task<IActionResult> Create(string treeName, int parentNodeId, string nodeName)
         {
-            return TryCatchOperation(() =>
+            return await TryCatchOperationAsync(() =>
             {
-                _repository.CreateNode(treeName, parentNodeId, nodeName);
+                return _repository.CreateNodeAsync(treeName, parentNodeId, nodeName);
             });
         }
 
         [HttpPost]
-        public IActionResult Delete(string treeName, int nodeId)
+        public async Task<IActionResult> Delete(string treeName, int nodeId)
         {
-            return TryCatchOperation(() =>
+            return await TryCatchOperationAsync(() =>
             {
-                _repository.DeleteNode(treeName, nodeId);
+                return _repository.DeleteNodeAsync(treeName, nodeId);
             });
         }
 
         [HttpPost]
-        public IActionResult Rename(string treeName, int nodeId, string newNodeName)
+        public async Task<IActionResult> Rename(string treeName, int nodeId, string newNodeName)
         {
-            return TryCatchOperation(() =>
+            return await TryCatchOperationAsync(() =>
             {
-                _repository.RenameNode(treeName, nodeId, newNodeName);
+                return _repository.RenameNodeAsync(treeName, nodeId, newNodeName);
             });
         }
 

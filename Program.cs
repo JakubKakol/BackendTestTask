@@ -11,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITreeAndNodeRepository, TreeAndNodeRepository>();
 var app = builder.Build();
 

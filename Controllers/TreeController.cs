@@ -7,17 +7,17 @@ namespace BackendTestTask.Controllers
     {
         private readonly ITreeAndNodeRepository _repository;
 
-        public TreeController(ITreeAndNodeRepository repository)
+        public TreeController(ITreeAndNodeRepository repository, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _repository = repository;
         }
 
         [HttpPost]
-        public IActionResult Get(string name)
+        public async Task<IActionResult> Get(string name)
         {
-            return TryCatchResult(() =>
+            return await TryCatchResultAsync(() =>
             {
-                return _repository.GetTree(name);
+                return _repository.GetTreeAsync(name);
             });
         }
     }

@@ -1,16 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using BackendTestTask.Data.Models;
+using BackendTestTask.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace BackendTestTask.Controllers
 {
     [Route("api.user.[controller].[action]")]
     public abstract class ApiControllerBase : Controller
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ApiControllerBase(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         [NonAction]
-        public IActionResult TryCatchResult<T>(Func<T> action)
+        public async Task<IActionResult> TryCatchResultAsync<T>(Func<Task<T>> action)
         {
             try
             {
-                var result = action.Invoke();
+                var result = await action.Invoke();
                 return Ok(result);
             }
             //TODO - Add custom exception and handling
@@ -25,11 +36,11 @@ namespace BackendTestTask.Controllers
         }
 
         [NonAction]
-        public IActionResult TryCatchOperation(Action action)
+        public async Task<IActionResult> TryCatchOperationAsync(Func<Task> action)
         {
             try
             {
-                action.Invoke();
+                await action.Invoke();
             }
             //TODO - Add custom exception and handling
             //catch (SecureException ex)

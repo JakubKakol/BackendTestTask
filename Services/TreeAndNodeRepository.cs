@@ -13,16 +13,16 @@ namespace BackendTestTask.Services
             _context = context;
         }
 
-        public Node GetNodeFromTree(Tree tree, int nodeID)
-            => tree.Children.First(n => n.ID == nodeID);
+        public async Task<Tree> GetTreeAsync(string treeName)
+            => await _context.Tree.Include(d => d.Children).FirstAsync(t => t.Name == treeName);
 
-        public Tree GetTree(string treeName)
-            => _context.Tree.Include(d => d.Children).First(t => t.Name == treeName);
+        public async Task<Node> GetNodeFromTreeAsync(int treeId, int nodeID)
+            => await _context.Node.Where(n => n.TreeID == treeId).FirstAsync(n => n.ID == nodeID);
 
-        public void CreateNode(string treeName, int parentNodeId, string nodeName)
+        public async Task CreateNodeAsync(string treeName, int parentNodeId, string nodeName)
         {
-            var tree = GetTree(treeName);
-            var parentNode = GetNodeFromTree(tree, parentNodeId);
+            var tree = await GetTreeAsync(treeName);
+            var parentNode = await GetNodeFromTreeAsync(tree.ID, parentNodeId);
 
             var newNode = new Node
             {
@@ -31,36 +31,36 @@ namespace BackendTestTask.Services
                 TreeID = tree.ID
             };
 
-            _context.Node.Add(newNode);
-            _context.SaveChanges();
+            await _context.Node.AddAsync(newNode);
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteNode(string treeName, int nodeId)
+        public async Task DeleteNodeAsync(string treeName, int nodeId)
         {
-            var tree = GetTree(treeName);
-            var node = GetNodeFromTree(tree, nodeId);
+            var tree = await GetTreeAsync(treeName);
+            var node = await GetNodeFromTreeAsync(tree.ID, nodeId);
 
             _context.Node.Remove(node);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void RenameNode(string treeName, int nodeId, string newNodeName)
+        public async Task RenameNodeAsync(string treeName, int nodeId, string newNodeName)
         {
-            var tree = GetTree(treeName);
-            var node = GetNodeFromTree(tree, nodeId);
+            var tree = await GetTreeAsync(treeName);
+            var node = await GetNodeFromTreeAsync(tree.ID, nodeId);
 
             node.Name = newNodeName;
             _context.Node.Update(node);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 
     public interface ITreeAndNodeRepository
     {
-        Tree GetTree(string treeName);
-        Node GetNodeFromTree(Tree tree, int nodeID);
-        void CreateNode(string treeName, int parentNodeId, string nodeName);
-        void DeleteNode(string treeName, int nodeId);
-        void RenameNode(string treeName, int nodeId, string newNodeName);
+        Task<Tree> GetTreeAsync(string treeName);
+        Task<Node> GetNodeFromTreeAsync(int treeId, int nodeID);
+        Task CreateNodeAsync(string treeName, int parentNodeId, string nodeName);
+        Task DeleteNodeAsync(string treeName, int nodeId);
+        Task RenameNodeAsync(string treeName, int nodeId, string newNodeName);
     }
 }
