@@ -1,7 +1,5 @@
-﻿using BackendTestTask.Data.DbContexts;
-using BackendTestTask.Data.Models;
+﻿using BackendTestTask.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackendTestTask.Controllers
 {
@@ -9,11 +7,11 @@ namespace BackendTestTask.Controllers
     //[Route("api.user.tree.node.[action]")]
     public class NodeController : ApiControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITreeAndNodeRepository _repository;
 
-        public NodeController(ApplicationDbContext context)
+        public NodeController(ITreeAndNodeRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
@@ -21,18 +19,7 @@ namespace BackendTestTask.Controllers
         {
             try
             {
-                var tree = _context.Tree.Include(d => d.Children).First(t => t.Name == treeName);
-                var parentNode = tree.Children.First(n => n.ID == parentNodeId);
-
-                var newNode = new Node
-                {
-                    Name = nodeName,
-                    ParentNodeID = parentNode.ID,
-                    TreeID = tree.ID
-                };
-
-                _context.Node.Add(newNode);
-                _context.SaveChanges();
+                _repository.CreateNode(treeName, parentNodeId, nodeName);
             }
             catch (Exception ex)
             {
@@ -48,17 +35,14 @@ namespace BackendTestTask.Controllers
         {
             try
             {
-                var tree = _context.Tree.Include(d => d.Children).First(t => t.Name == treeName);
-                var node = tree.Children.First(n => n.ID == nodeId);
-
-                _context.Node.Remove(node);
-                _context.SaveChanges();
+                _repository.DeleteNode(treeName, nodeId);
             }
             catch (Exception ex)
             {
                 //TODO - Add custom exception and handling
                 return Json(ex);
             }
+
             return Ok();
         }
 
@@ -67,18 +51,14 @@ namespace BackendTestTask.Controllers
         {
             try
             {
-                var tree = _context.Tree.Include(d => d.Children).First(t => t.Name == treeName);
-                var node = tree.Children.First(n => n.ID == nodeId);
-
-                node.Name = newNodeName;
-                _context.Node.Update(node);
-                _context.SaveChanges();
+                _repository.RenameNode(treeName, nodeId, newNodeName);
             }
             catch (Exception ex)
             {
                 //TODO - Add custom exception and handling
                 return Json(ex);
             }
+
             return Ok();
         }
 

@@ -1,16 +1,15 @@
-﻿using BackendTestTask.Data.DbContexts;
+﻿using BackendTestTask.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackendTestTask.Controllers
 {
     public class TreeController : ApiControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITreeAndNodeRepository _repository;
 
-        public TreeController(ApplicationDbContext context)
+        public TreeController(ITreeAndNodeRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
@@ -18,9 +17,7 @@ namespace BackendTestTask.Controllers
         {
             try
             {
-                var tree = _context.Tree
-                    .Include(t => t.Children)
-                    .First(t => t.Name == name);
+                var tree = _repository.GetTree(name);
 
                 return Ok(tree);
             }
