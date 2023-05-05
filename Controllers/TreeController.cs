@@ -13,6 +13,7 @@ namespace BackendTestTask.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Get(string name)
         {
             try
@@ -21,7 +22,7 @@ namespace BackendTestTask.Controllers
                     .Include(t => t.Children)
                     .First(t => t.Name == name);
 
-                return Json(tree);
+                return Ok(tree);
             }
             catch (Exception ex)
             {
