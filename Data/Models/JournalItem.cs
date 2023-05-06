@@ -4,7 +4,7 @@
     {
         public int ID { get; set; }
         public string EventId { get; set; }
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
         public string RequestQueryString { get; set; }
         public string RequestBody { get; set; }
         public string ExceptionType { get; set; }
