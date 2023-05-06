@@ -15,12 +15,31 @@ namespace BackendTestTask.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<JournalResult>> GetRangeAsync(int skip, int take, JournalFilter filter)
+        public async Task<JournalRange> GetRangeAsync(int skip, int take, JournalFilter filter)
         {
-            throw new NotImplementedException();
+            IQueryable<JournalItem> journalItems;
+
+            if (filter == null)
+            {
+                journalItems = _context.JournalItem.Take(take).Skip(skip);
+            }
+            else
+            {
+                journalItems = _context.JournalItem
+                    .Where(j => (filter.From == null || filter.To == null) || (j.CreatedAt >= filter.From && j.CreatedAt <= filter.To))
+                    .Where(j => string.IsNullOrEmpty(filter.Search) || j.ExceptionMessage.Contains(filter.Search) || j.StackTrace.Contains(filter.Search))
+                    .Take(take).Skip(skip);
+            }
+
+            return new JournalRange
+            {
+                Skip = skip,
+                Count = take,
+                Items = await journalItems.Select(i => new JournalResult(i)).ToListAsync()
+            };
         }
 
-        public async Task<JournalResult> GetSingleAsync(int id)
+        public async Task<DetailedJournalResult> GetSingleAsync(int id)
         {
             var journalItem = await _context.JournalItem.FirstOrDefaultAsync(j => j.ID == id);
 
@@ -29,13 +48,13 @@ namespace BackendTestTask.Services
                 throw new JournalItemNotFoundException(id);
             }
 
-            return new JournalResult(journalItem);
+            return new DetailedJournalResult(journalItem);
         }
     }
 
     public interface IJournalRepository
     {
-        Task<JournalResult> GetSingleAsync(int id);
-        Task<IEnumerable<JournalResult>> GetRangeAsync(int skip, int take, JournalFilter filter);
+        Task<DetailedJournalResult> GetSingleAsync(int id);
+        Task<JournalRange> GetRangeAsync(int skip, int take, JournalFilter filter);
     }
 }
