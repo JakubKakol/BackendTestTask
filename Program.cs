@@ -13,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITreeAndNodeRepository, TreeAndNodeRepository>();
+builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
