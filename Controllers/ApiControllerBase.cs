@@ -58,7 +58,7 @@ namespace BackendTestTask.Controllers
             var journalItem = new JournalItem
             {
                 EventId = Guid.NewGuid().ToString(),
-                Timestamp = DateTimeOffset.UtcNow,
+                CreatedAt = DateTimeOffset.UtcNow,
                 RequestQueryString = queryString,
                 RequestBody = requestBody,
                 ExceptionType = exception is SecureException ? nameof(SecureException) : nameof(Exception),

@@ -8,6 +8,7 @@ namespace BackendTestTask.Controllers
     public class JournalController : ApiControllerBase
     {
         private readonly IJournalRepository _journalRepository;
+
         public JournalController(IJournalRepository journalRepository, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context) : base(httpContextAccessor, context)
         {
             _journalRepository = journalRepository;

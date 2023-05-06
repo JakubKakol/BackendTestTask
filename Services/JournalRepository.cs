@@ -1,6 +1,8 @@
 ﻿using BackendTestTask.Data.DbContexts;
 using BackendTestTask.Data.Models;
 using BackendTestTask.Data.Models.Helpers;
+using BackendTestTask.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendTestTask.Services
 {
@@ -13,20 +15,27 @@ namespace BackendTestTask.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<JournalItem>> GetRangeAsync(int skip, int take, JournalFilter filter)
+        public async Task<IEnumerable<JournalResult>> GetRangeAsync(int skip, int take, JournalFilter filter)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<JournalItem> GetSingleAsync(int id)
+        public async Task<JournalResult> GetSingleAsync(int id)
         {
-            throw new NotImplementedException();
+            var journalItem = await _context.JournalItem.FirstOrDefaultAsync(j => j.ID == id);
+
+            if (journalItem == null)
+            {
+                throw new JournalItemNotFoundException(id);
+            }
+
+            return new JournalResult(journalItem);
         }
     }
 
     public interface IJournalRepository
     {
-        Task<JournalItem> GetSingleAsync(int id);
-        Task<IEnumerable<JournalItem>> GetRangeAsync(int skip, int take, JournalFilter filter);
+        Task<JournalResult> GetSingleAsync(int id);
+        Task<IEnumerable<JournalResult>> GetRangeAsync(int skip, int take, JournalFilter filter);
     }
 }
