@@ -85,6 +85,11 @@ namespace BackendTestTask.Services
             var tree = await GetTreeAsync(treeName);
             var node = await GetNodeFromTreeAsync(tree.ID, nodeId);
 
+            if (tree.Children.Any(n => n.Name == newNodeName))
+            {
+                throw new SiblingNodeNameDuplicateException(tree, newNodeName);
+            }
+
             node.Name = newNodeName;
             _context.Node.Update(node);
             await _context.SaveChangesAsync();
