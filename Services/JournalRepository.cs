@@ -13,12 +13,12 @@ namespace BackendTestTask.Services
             _context = context;
         }
 
-        public Task<IEnumerable<JournalItem>> GetRange(int skip, int take, JournalFilter filter)
+        public async Task<IEnumerable<JournalItem>> GetRangeAsync(int skip, int take, JournalFilter filter)
         {
             throw new NotImplementedException();
         }
 
-        public Task<JournalItem> GetSingle(int id)
+        public async Task<JournalItem> GetSingleAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace BackendTestTask.Services
 
     public interface IJournalRepository
     {
-        Task<JournalItem> GetSingle(int id);
-        Task<IEnumerable<JournalItem>> GetRange(int skip, int take, JournalFilter filter);
+        Task<JournalItem> GetSingleAsync(int id);
+        Task<IEnumerable<JournalItem>> GetRangeAsync(int skip, int take, JournalFilter filter);
     }
 }
