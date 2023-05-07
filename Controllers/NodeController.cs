@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BackendTestTask.Controllers
 {
-    //TODO - Try adding a different route:
-    //[Route("api.user.tree.node.[action]")]
     public class NodeController : ApiControllerBase
     {
         private readonly ITreeAndNodeRepository _repository;
